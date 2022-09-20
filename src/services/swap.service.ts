@@ -24,6 +24,20 @@ import {
 class SwapService {
   constructor(public storeService: StoreService, private connectService: ConnectService = new ConnectService(RELAY)) {}
 
+  public async getTokenData(): Promise<{ token: { denom: string; symbol: string } }> {
+    try {
+      return {
+        token: {
+          denom: TOKEN_DENOM,
+          symbol: TOKEN_SYMBOL,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   public async getStatus(
     requestKey: string
   ): Promise<{ message: string; status: number; signer: string; addedAt: string }> {

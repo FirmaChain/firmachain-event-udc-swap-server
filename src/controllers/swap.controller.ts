@@ -9,6 +9,17 @@ import { SUCCESS, INVALID_KEY } from '../constants/httpResult';
 class EventController {
   constructor(public storeService: StoreService, private swapService = new SwapService(storeService)) {}
 
+  public getTokenData = (req: Request, res: Response): void => {
+    this.swapService
+      .getTokenData()
+      .then((result) => {
+        res.send({ ...SUCCESS, result });
+      })
+      .catch(() => {
+        res.send({ ...INVALID_KEY, result: {} });
+      });
+  };
+
   public getStatus = (req: Request, res: Response): void => {
     const { requestKey } = req.params;
 

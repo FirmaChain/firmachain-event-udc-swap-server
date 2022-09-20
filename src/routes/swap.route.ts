@@ -15,6 +15,7 @@ class SwapRoute implements Routes {
   }
 
   private initializeRoutes() {
+    this.router.get(`${this.path}/token`, this.swapController.getTokenData);
     this.router.get(`${this.path}/requests/:requestKey`, this.swapController.getStatus);
 
     this.router.post(`${this.path}/sign/login`, this.swapController.arbitarySignForLogin);
