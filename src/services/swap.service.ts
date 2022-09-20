@@ -17,6 +17,8 @@ import {
   LOGIN_MESSAGE,
   SWAP_MESSAGE,
   STATION_IDENTITY,
+  TOKEN_DENOM,
+  TOKEN_SYMBOL,
 } from '../constants/event';
 
 class SwapService {
@@ -57,16 +59,20 @@ class SwapService {
     }
   }
 
-  public async directSignForSwap(signer: string, fctAmount: number): Promise<{ requestKey: string; qrcode: string }> {
+  public async directSignForSwap(signer: string, tokenAmount: number): Promise<{ requestKey: string; qrcode: string }> {
     try {
-      const message = this.createSampleMessage(signer, fctAmount);
+      const message = this.createSampleMessage(signer, tokenAmount);
       const info: string = SWAP_MESSAGE;
       const pubkey = await this.getPubkey(signer);
 
       const session = await this.connectService.connect(PROJECT_SECRET_KEY);
       const signDoc = await this.connectService.getSignDoc(signer, pubkey, message);
 
-      const qrcodeOrigin = await this.connectService.getQRCodeForDirectSign(session, signer, signDoc, info);
+      const uTokenAmount = this.connectService.getUFCTStringFromFCT(tokenAmount);
+
+      const qrcodeOrigin = await this.connectService.getQRCodeForDirectSign(session, signer, signDoc, info, {
+        token: { denom: TOKEN_DENOM, symbol: TOKEN_SYMBOL, amount: uTokenAmount },
+      });
       const requestKey = qrcodeOrigin.replace('sign://', '');
       const qrcode = qrcodeOrigin.replace('sign://', `${STATION_IDENTITY}://`);
 
@@ -82,8 +88,13 @@ class SwapService {
     }
   }
 
-  public async callback(requestKey: string, signData: any): Promise<void> {
+  public async callback(requestKey: string, approve: boolean, signData: any): Promise<void> {
     const requestData = await this.getRequest(requestKey);
+
+    if (approve === false) {
+      await this.changeRequestStatus(requestKey, INVALID);
+      return;
+    }
 
     try {
       switch (requestData.type) {
@@ -141,11 +152,11 @@ class SwapService {
     };
   }
 
-  private createSampleMessage(address: string, fctAmount: number): Array<EncodeObject> {
+  private createSampleMessage(address: string, tokenAmount: number): Array<EncodeObject> {
     const userAddress = address;
     const dappAddress = SWAP_WALLET_ADDRESS;
 
-    const sendAmount = { denom: 'ufct', amount: this.connectService.getUFCTStringFromFCT(fctAmount) };
+    const sendAmount = { denom: 'uudc', amount: this.connectService.getUFCTStringFromFCT(tokenAmount) };
 
     let msgSend = BankTxClient.msgSend({
       fromAddress: userAddress,
@@ -180,7 +191,8 @@ class SwapService {
     addedAt: string;
   }> {
     const result = await this.storeService.hgetAll(`${SWAP_REQUEST}${requestKey}`);
-    result.status = Number(result.status);
+    if (result.status) result.status = Number(result.status);
+    else result.status = -1;
 
     return result;
   }

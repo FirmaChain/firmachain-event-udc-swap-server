@@ -47,7 +47,7 @@ export class ConnectService {
     try {
       const response: ResponseQRCodeData = await this.requestService.requestPost<ResponseQRCodeData>(
         `/v1/projects/sign`,
-        { type: 0, signer, message, info, argument: {}, isMultiple: false },
+        { qrType: 0, type: 0, signer, message, info, argument: {}, isMultiple: false },
         { authorization: `Bearer ${session.projectKey}` }
       );
 
@@ -64,12 +64,13 @@ export class ConnectService {
     session: UserSession,
     signer: string,
     message: string,
-    info: string
+    info: string,
+    argument: object
   ): Promise<string> {
     try {
       const response: ResponseQRCodeData = await this.requestService.requestPost<ResponseQRCodeData>(
         `/v1/projects/sign`,
-        { type: 1, signer, message, info, argument: {}, isMultiple: false },
+        { qrType: 0, type: 1, signer, message, info, argument, isMultiple: false },
         { authorization: `Bearer ${session.projectKey}` }
       );
 
@@ -107,6 +108,10 @@ export class ConnectService {
 
   public getUFCTStringFromFCT(fct: number) {
     return FirmaUtil.getUFCTStringFromFCT(fct);
+  }
+
+  public getUFCTFromFCT(fct: number) {
+    return FirmaUtil.getUFCTFromFCT(fct);
   }
 }
 

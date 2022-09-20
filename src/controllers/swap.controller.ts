@@ -35,10 +35,10 @@ class EventController {
   };
 
   public directSignForSwap = (req: Request, res: Response): void => {
-    const { signer, fctAmount } = req.body;
+    const { signer, tokenAmount } = req.body;
 
     this.swapService
-      .directSignForSwap(signer, fctAmount)
+      .directSignForSwap(signer, tokenAmount)
       .then((result) => {
         resultLog(result);
         res.send({ ...SUCCESS, result });
@@ -49,10 +49,10 @@ class EventController {
   };
 
   public callback = (req: Request, res: Response): void => {
-    const { requestKey, signData } = req.body;
+    const { requestKey, approve, signData } = req.body;
 
     this.swapService
-      .callback(requestKey, signData)
+      .callback(requestKey, approve, signData)
       .then((result) => {
         resultLog(result);
         res.send({ ...SUCCESS, result });

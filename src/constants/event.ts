@@ -20,3 +20,5 @@ export const LOGIN_MESSAGE = process.env.LOGIN_MESSAGE!;
 export const SWAP_MESSAGE = process.env.SWAP_MESSAGE!;
 
 export const STATION_IDENTITY = process.env.STATION_IDENTITY!;
+export const TOKEN_DENOM = process.env.TOKEN_DENOM!;
+export const TOKEN_SYMBOL = process.env.TOKEN_SYMBOL!;
