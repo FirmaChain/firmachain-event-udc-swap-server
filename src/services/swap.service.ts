@@ -170,7 +170,7 @@ class SwapService {
     const userAddress = address;
     const dappAddress = SWAP_WALLET_ADDRESS;
 
-    const sendAmount = { denom: 'uudc', amount: this.connectService.getUFCTStringFromFCT(tokenAmount) };
+    const sendAmount = { denom: TOKEN_DENOM, amount: this.connectService.getUFCTStringFromFCT(tokenAmount) };
 
     let msgSend = BankTxClient.msgSend({
       fromAddress: userAddress,
