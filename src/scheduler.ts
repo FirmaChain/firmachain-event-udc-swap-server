@@ -48,7 +48,7 @@ class EventScheduler {
 
       if (queueData !== null) {
         const queueDataJSON = JSON.parse(queueData);
-        const signer = queueDataJSON.signer;
+        const signer = queueDataJSON.address;
         const signData = queueDataJSON.signData;
         const signDataJSON = JSON.parse(signData);
         const rawDataJSON = JSON.parse(signDataJSON.rawData);

@@ -147,7 +147,7 @@ class SwapService {
     await this.changeRequestStatus(requestKey, SUCCESS);
     await this.changeRequestSignData(requestKey, signData);
 
-    await this.addSwapQueue(signer, JSON.stringify({ signer, signData: JSON.stringify(signData) }));
+    await this.addSwapQueue(signer, JSON.stringify(signData));
   }
 
   public async verify(
