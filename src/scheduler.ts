@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import TelegramBot from 'node-telegram-bot-api';
-import { FirmaSDK } from '@firmachain/firma-js';
+import { FirmaSDK, FirmaUtil } from '@firmachain/firma-js';
 
 import StoreService from './services/store.service';
 
@@ -71,10 +71,11 @@ class EventScheduler {
 
         let isCorrect = false;
         let amount = 0;
-        for (let raw of rawLogJSON) {
-          if (raw.type === 'transfer') {
+        const events = rawLogJSON[0].events;
+        for (let event of events) {
+          if (event.type === 'transfer') {
             let counter = 0;
-            for (let attribute of raw.attributes) {
+            for (let attribute of event.attributes) {
               if (attribute.key === 'recipient' && attribute.value === SWAP_WALLET_ADDRESS) {
                 counter++;
               }
@@ -82,7 +83,7 @@ class EventScheduler {
                 counter++;
               }
               if (attribute.key === 'amount') {
-                amount = Number(attribute.value.replace(TOKEN_DENOM, ''));
+                amount = Number(FirmaUtil.getFCTStringFromUFCT(attribute.value.replace(TOKEN_DENOM, '')));
               }
             }
 
