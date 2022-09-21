@@ -105,7 +105,7 @@ class EventScheduler {
 
         const decryptMnemonic = getDecryptString(SWAP_WALLET_MNEMONIC, SECRET);
         const swapWallet = await this.firmaSDK.Wallet.fromMnemonic(decryptMnemonic);
-        const fctAmount = amount / 100;
+        const fctAmount = amount / 1000;
 
         const result = await this.firmaSDK.Bank.send(swapWallet, signer, fctAmount);
 
