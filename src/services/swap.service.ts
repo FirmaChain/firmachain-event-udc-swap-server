@@ -19,6 +19,7 @@ import {
   STATION_IDENTITY,
   TOKEN_DENOM,
   TOKEN_SYMBOL,
+  SWAP_REWARD_QUEUE,
 } from '../constants/event';
 
 class SwapService {
@@ -146,7 +147,7 @@ class SwapService {
     await this.changeRequestStatus(requestKey, SUCCESS);
     await this.changeRequestSignData(requestKey, signData);
 
-    // TODO : add queue
+    await this.addSwapQueue(signer, JSON.stringify(signData));
   }
 
   public async verify(
@@ -221,6 +222,10 @@ class SwapService {
 
   private async changeRequestSignData(requestKey: string, signData: any): Promise<void> {
     await this.storeService.hsetMessage(`${SWAP_REQUEST}${requestKey}`, 'signData', JSON.stringify(signData));
+  }
+
+  private async addSwapQueue(address: string, signData: string) {
+    await this.storeService.push(SWAP_REWARD_QUEUE, JSON.stringify({ address, signData }));
   }
 
   private async addAddress(address: string, pubkey: string): Promise<void> {
