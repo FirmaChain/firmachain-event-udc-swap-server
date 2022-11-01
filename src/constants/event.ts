@@ -24,3 +24,4 @@ export const TOKEN_DENOM = process.env.TOKEN_DENOM!;
 export const TOKEN_SYMBOL = process.env.TOKEN_SYMBOL!;
 
 export const SECRET = process.env.SECRET!;
+export const EXPIRED_EVENT = process.env.EXPIRED_EVENT!;

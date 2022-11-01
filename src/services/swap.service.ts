@@ -20,6 +20,7 @@ import {
   TOKEN_DENOM,
   TOKEN_SYMBOL,
   SWAP_REWARD_QUEUE,
+  EXPIRED_EVENT,
 } from '../constants/event';
 
 class SwapService {
@@ -76,6 +77,10 @@ class SwapService {
 
   public async directSignForSwap(signer: string, tokenAmount: number): Promise<{ requestKey: string; qrcode: string }> {
     try {
+      if (EXPIRED_EVENT === 'true') {
+        throw new Error('EXPIRED SWAP EVENT');
+      }
+
       const message = this.createSampleMessage(signer, tokenAmount);
       const info: string = SWAP_MESSAGE;
       const pubkey = await this.getPubkey(signer);
